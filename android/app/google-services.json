@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "380736620920",
+    "project_id": "xenaoura-mobile",
+    "storage_bucket": "xenaoura-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380736620920:android:97d0c416b5a97357cee08d",
+        "android_client_info": {
+          "package_name": "com.example.job_finder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYxxYoCwFNtdKBEE29oe8Hsgt8sRjtss0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380736620920:android:90e62b1fd2c89025cee08d",
+        "android_client_info": {
+          "package_name": "xenoura.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYxxYoCwFNtdKBEE29oe8Hsgt8sRjtss0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
