@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../auth/presentation/auth_provider.dart';
+import '../../auth/data/auth_repository.dart';
 import '../../jobs/domain/job_model.dart';
-// For JobCard
+import '../../jobs/presentation/home_screen.dart'; // For JobCard
 
 class PersonalizedJobsScreen extends ConsumerStatefulWidget {
-  const PersonalizedJobsScreen({super.key});
+  final String? title;
+
+  const PersonalizedJobsScreen({this.title, super.key});
 
   @override
   ConsumerState<PersonalizedJobsScreen> createState() =>
@@ -28,34 +31,13 @@ class _PersonalizedJobsScreenState
 
   Future<void> _fetchPersonalizedJobs() async {
     final user = ref.read(authNotifierProvider).asData?.value;
-    if (user == null || user.interests.isEmpty) {
-      setState(() {
-        _isLoading = false;
-        _jobs = [];
-      });
-      return;
-    }
+    if (user == null) return;
 
     try {
-      // Workaround for Firestore limit of 10 items in 'array-contains-any'
-      final queryTags = user.interests.take(10).toList();
-
-      final snapshot = await FirebaseFirestore.instance
-          .collection('jobs')
-          .where('tags', arrayContainsAny: queryTags)
-          .get();
-
-      final jobs = snapshot.docs.map((doc) {
-        final data = doc.data();
-        data['id'] = doc.id;
-        return JobModel.fromJson(data);
-      }).toList();
-
-      if (mounted) {
-        setState(() {
-          _jobs = jobs;
-          _isLoading = false;
-        });
+      if (widget.title == 'Favoriler') {
+        await _fetchFavorites(user.id);
+      } else {
+        await _fetchRecommendations(user);
       }
     } catch (e) {
       if (mounted) {
@@ -64,6 +46,74 @@ class _PersonalizedJobsScreenState
           _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _fetchFavorites(String userId) async {
+    // 1. Get Favorite Job IDs (sorted by date)
+    final favIds = await ref.read(authRepositoryProvider).getFavoriteJobIds(userId);
+
+    if (favIds.isEmpty) {
+      if (mounted) setState(() { _jobs = []; _isLoading = false; });
+      return;
+    }
+
+    // 2. Fetch all jobs to find matches (Firestore limitation workaround for order)
+    // For production with many jobs, use whereIn loops. For now, fetch all 50 latest or lookup one by one.
+    // Looking up one by one preserves order easily.
+    
+    final List<JobModel> loadedJobs = [];
+    
+    // Fetching sequentially to maintain sort order from IDs
+    for (final id in favIds) {
+      final doc = await FirebaseFirestore.instance.collection('jobs').doc(id).get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        data['id'] = doc.id;
+        loadedJobs.add(JobModel.fromJson(data));
+      }
+    }
+
+    if (mounted) {
+      setState(() {
+        _jobs = loadedJobs;
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _fetchRecommendations(user) async {
+    if (user.interests.isEmpty) {
+      if (mounted) setState(() { _jobs = []; _isLoading = false; });
+      return;
+    }
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('jobs')
+        .orderBy('datePosted', descending: true)
+        .limit(50)
+        .get();
+
+    final allJobs = snapshot.docs.map((doc) {
+      final data = doc.data();
+      data['id'] = doc.id;
+      return JobModel.fromJson(data);
+    }).toList();
+
+    final userInterests = user.interests.map((e) => (e as String).toLowerCase()).toSet();
+
+    final filteredJobs = allJobs.where((job) {
+      final title = job.title.toLowerCase();
+      final tags = job.tags.map((t) => t.toLowerCase()).toSet();
+      return userInterests.any((interest) =>
+          title.contains(interest) || tags.contains(interest));
+    }).toList();
+
+    if (mounted) {
+      setState(() {
+        _jobs = filteredJobs;
+        _isLoading = false;
+      });
     }
   }
 
@@ -77,39 +127,23 @@ class _PersonalizedJobsScreenState
 
     if (_error != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Önerilen İlanlar')),
+        appBar: AppBar(title: Text(widget.title ?? 'Önerilen İlanlar')),
         body: Center(child: Text('Hata: $_error')),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Önerilen İlanlar')),
+      appBar: AppBar(title: Text(widget.title ?? 'Önerilen İlanlar')),
       body: _jobs.isEmpty
           ? const Center(child: Text('İlgi alanlarınıza uygun ilan bulunamadı.'))
           : ListView.builder(
               itemCount: _jobs.length,
               itemBuilder: (context, index) {
                 final job = _jobs[index];
-                // Override onTap to pass showSalary: true
-                return Card(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    title: Text(job.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(job.company),
-                        Text(
-                            '${job.location} • ${job.datePosted.toString().split(' ')[0]}'),
-                      ],
-                    ),
-                    onTap: () {
-                      context.push('/detail',
-                          extra: {'job': job, 'showSalary': true});
-                    },
-                  ),
+                final isFavorites = widget.title == 'Favoriler';
+                return JobCard(
+                  job: job,
+                  showSalary: !isFavorites, // Show only if NOT Favorites (i.e. Recommended)
                 );
               },
             ),

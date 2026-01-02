@@ -12,9 +12,12 @@ _JobModel _$JobModelFromJson(Map<String, dynamic> json) => _JobModel(
   company: json['company'] as String,
   location: json['location'] as String,
   datePosted: _timestampFromJson(json['datePosted']),
+  updatedAt: _timestampFromJsonNullable(json['updatedAt']),
   salary: (json['salary'] as num).toDouble(),
   description: json['description'] as String,
   tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
+  creatorName: json['creatorName'] as String? ?? 'Emre',
+  creatorId: json['creatorId'] as String? ?? '',
 );
 
 Map<String, dynamic> _$JobModelToJson(_JobModel instance) => <String, dynamic>{
@@ -23,7 +26,10 @@ Map<String, dynamic> _$JobModelToJson(_JobModel instance) => <String, dynamic>{
   'company': instance.company,
   'location': instance.location,
   'datePosted': _timestampToJson(instance.datePosted),
+  'updatedAt': _timestampToJsonNullable(instance.updatedAt),
   'salary': instance.salary,
   'description': instance.description,
   'tags': instance.tags,
+  'creatorName': instance.creatorName,
+  'creatorId': instance.creatorId,
 };

@@ -55,6 +55,25 @@ class AuthNotifier extends AsyncNotifier<UserModel?> {
     await prefs.remove(_passKey);
     state = const AsyncValue.data(null);
   }
+
+  /// Silently refreshes user data without triggering loading state
+  Future<void> refreshUser() async {
+    final currentUser = state.asData?.value;
+    if (currentUser == null) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final username = prefs.getString(_userKey);
+    final password = prefs.getString(_passKey);
+
+    if (username != null && password != null) {
+      // Don't set state to loading
+      state = await AsyncValue.guard(() async {
+        return await ref
+            .read(authRepositoryProvider)
+            .loginUser(username: username, password: password);
+      });
+    }
+  }
 }
 
 final authNotifierProvider = AsyncNotifierProvider<AuthNotifier, UserModel?>(() {

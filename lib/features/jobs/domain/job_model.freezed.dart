@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JobModel {
 
- String get id; String get title; String get company; String get location;@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime get datePosted; double get salary; String get description; List<String> get tags;
+ String get id; String get title; String get company; String get location;@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime get datePosted;@JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable) DateTime? get updatedAt; double get salary; String get description; List<String> get tags; String get creatorName; String get creatorId;
 /// Create a copy of JobModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $JobModelCopyWith<JobModel> get copyWith => _$JobModelCopyWithImpl<JobModel>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.company, company) || other.company == company)&&(identical(other.location, location) || other.location == location)&&(identical(other.datePosted, datePosted) || other.datePosted == datePosted)&&(identical(other.salary, salary) || other.salary == salary)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.tags, tags));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.company, company) || other.company == company)&&(identical(other.location, location) || other.location == location)&&(identical(other.datePosted, datePosted) || other.datePosted == datePosted)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.salary, salary) || other.salary == salary)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.creatorName, creatorName) || other.creatorName == creatorName)&&(identical(other.creatorId, creatorId) || other.creatorId == creatorId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,company,location,datePosted,salary,description,const DeepCollectionEquality().hash(tags));
+int get hashCode => Object.hash(runtimeType,id,title,company,location,datePosted,updatedAt,salary,description,const DeepCollectionEquality().hash(tags),creatorName,creatorId);
 
 @override
 String toString() {
-  return 'JobModel(id: $id, title: $title, company: $company, location: $location, datePosted: $datePosted, salary: $salary, description: $description, tags: $tags)';
+  return 'JobModel(id: $id, title: $title, company: $company, location: $location, datePosted: $datePosted, updatedAt: $updatedAt, salary: $salary, description: $description, tags: $tags, creatorName: $creatorName, creatorId: $creatorId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $JobModelCopyWith<$Res>  {
   factory $JobModelCopyWith(JobModel value, $Res Function(JobModel) _then) = _$JobModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String company, String location,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime datePosted, double salary, String description, List<String> tags
+ String id, String title, String company, String location,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime datePosted,@JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable) DateTime? updatedAt, double salary, String description, List<String> tags, String creatorName, String creatorId
 });
 
 
@@ -65,17 +65,20 @@ class _$JobModelCopyWithImpl<$Res>
 
 /// Create a copy of JobModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? company = null,Object? location = null,Object? datePosted = null,Object? salary = null,Object? description = null,Object? tags = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? company = null,Object? location = null,Object? datePosted = null,Object? updatedAt = freezed,Object? salary = null,Object? description = null,Object? tags = null,Object? creatorName = null,Object? creatorId = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,company: null == company ? _self.company : company // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,datePosted: null == datePosted ? _self.datePosted : datePosted // ignore: cast_nullable_to_non_nullable
-as DateTime,salary: null == salary ? _self.salary : salary // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,salary: null == salary ? _self.salary : salary // ignore: cast_nullable_to_non_nullable
 as double,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,creatorName: null == creatorName ? _self.creatorName : creatorName // ignore: cast_nullable_to_non_nullable
+as String,creatorId: null == creatorId ? _self.creatorId : creatorId // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 
@@ -160,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted,  double salary,  String description,  List<String> tags)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted, @JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable)  DateTime? updatedAt,  double salary,  String description,  List<String> tags,  String creatorName,  String creatorId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JobModel() when $default != null:
-return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.salary,_that.description,_that.tags);case _:
+return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.updatedAt,_that.salary,_that.description,_that.tags,_that.creatorName,_that.creatorId);case _:
   return orElse();
 
 }
@@ -181,10 +184,10 @@ return $default(_that.id,_that.title,_that.company,_that.location,_that.datePost
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted,  double salary,  String description,  List<String> tags)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted, @JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable)  DateTime? updatedAt,  double salary,  String description,  List<String> tags,  String creatorName,  String creatorId)  $default,) {final _that = this;
 switch (_that) {
 case _JobModel():
-return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.salary,_that.description,_that.tags);case _:
+return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.updatedAt,_that.salary,_that.description,_that.tags,_that.creatorName,_that.creatorId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +204,10 @@ return $default(_that.id,_that.title,_that.company,_that.location,_that.datePost
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted,  double salary,  String description,  List<String> tags)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String company,  String location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)  DateTime datePosted, @JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable)  DateTime? updatedAt,  double salary,  String description,  List<String> tags,  String creatorName,  String creatorId)?  $default,) {final _that = this;
 switch (_that) {
 case _JobModel() when $default != null:
-return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.salary,_that.description,_that.tags);case _:
+return $default(_that.id,_that.title,_that.company,_that.location,_that.datePosted,_that.updatedAt,_that.salary,_that.description,_that.tags,_that.creatorName,_that.creatorId);case _:
   return null;
 
 }
@@ -215,8 +218,8 @@ return $default(_that.id,_that.title,_that.company,_that.location,_that.datePost
 /// @nodoc
 @JsonSerializable()
 
-class _JobModel implements JobModel {
-  const _JobModel({required this.id, required this.title, required this.company, required this.location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) required this.datePosted, required this.salary, required this.description, required final  List<String> tags}): _tags = tags;
+class _JobModel extends JobModel {
+  const _JobModel({required this.id, required this.title, required this.company, required this.location, @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) required this.datePosted, @JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable) this.updatedAt, required this.salary, required this.description, required final  List<String> tags, this.creatorName = 'Emre', this.creatorId = ''}): _tags = tags,super._();
   factory _JobModel.fromJson(Map<String, dynamic> json) => _$JobModelFromJson(json);
 
 @override final  String id;
@@ -224,6 +227,7 @@ class _JobModel implements JobModel {
 @override final  String company;
 @override final  String location;
 @override@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) final  DateTime datePosted;
+@override@JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable) final  DateTime? updatedAt;
 @override final  double salary;
 @override final  String description;
  final  List<String> _tags;
@@ -233,6 +237,8 @@ class _JobModel implements JobModel {
   return EqualUnmodifiableListView(_tags);
 }
 
+@override@JsonKey() final  String creatorName;
+@override@JsonKey() final  String creatorId;
 
 /// Create a copy of JobModel
 /// with the given fields replaced by the non-null parameter values.
@@ -247,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.company, company) || other.company == company)&&(identical(other.location, location) || other.location == location)&&(identical(other.datePosted, datePosted) || other.datePosted == datePosted)&&(identical(other.salary, salary) || other.salary == salary)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._tags, _tags));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.company, company) || other.company == company)&&(identical(other.location, location) || other.location == location)&&(identical(other.datePosted, datePosted) || other.datePosted == datePosted)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.salary, salary) || other.salary == salary)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.creatorName, creatorName) || other.creatorName == creatorName)&&(identical(other.creatorId, creatorId) || other.creatorId == creatorId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,company,location,datePosted,salary,description,const DeepCollectionEquality().hash(_tags));
+int get hashCode => Object.hash(runtimeType,id,title,company,location,datePosted,updatedAt,salary,description,const DeepCollectionEquality().hash(_tags),creatorName,creatorId);
 
 @override
 String toString() {
-  return 'JobModel(id: $id, title: $title, company: $company, location: $location, datePosted: $datePosted, salary: $salary, description: $description, tags: $tags)';
+  return 'JobModel(id: $id, title: $title, company: $company, location: $location, datePosted: $datePosted, updatedAt: $updatedAt, salary: $salary, description: $description, tags: $tags, creatorName: $creatorName, creatorId: $creatorId)';
 }
 
 
@@ -267,7 +273,7 @@ abstract mixin class _$JobModelCopyWith<$Res> implements $JobModelCopyWith<$Res>
   factory _$JobModelCopyWith(_JobModel value, $Res Function(_JobModel) _then) = __$JobModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String company, String location,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime datePosted, double salary, String description, List<String> tags
+ String id, String title, String company, String location,@JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson) DateTime datePosted,@JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable) DateTime? updatedAt, double salary, String description, List<String> tags, String creatorName, String creatorId
 });
 
 
@@ -284,17 +290,20 @@ class __$JobModelCopyWithImpl<$Res>
 
 /// Create a copy of JobModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? company = null,Object? location = null,Object? datePosted = null,Object? salary = null,Object? description = null,Object? tags = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? company = null,Object? location = null,Object? datePosted = null,Object? updatedAt = freezed,Object? salary = null,Object? description = null,Object? tags = null,Object? creatorName = null,Object? creatorId = null,}) {
   return _then(_JobModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,company: null == company ? _self.company : company // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,datePosted: null == datePosted ? _self.datePosted : datePosted // ignore: cast_nullable_to_non_nullable
-as DateTime,salary: null == salary ? _self.salary : salary // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,salary: null == salary ? _self.salary : salary // ignore: cast_nullable_to_non_nullable
 as double,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,creatorName: null == creatorName ? _self.creatorName : creatorName // ignore: cast_nullable_to_non_nullable
+as String,creatorId: null == creatorId ? _self.creatorId : creatorId // ignore: cast_nullable_to_non_nullable
+as String,
   ));
 }
 

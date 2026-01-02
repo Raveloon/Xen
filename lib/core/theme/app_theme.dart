@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static const Color canvasColor = Color(0xFFF7F7F7); // Off-white background
@@ -27,27 +27,22 @@ class AppTheme {
         // background: canvasColor,
         // onBackground: primaryColor,
       ),
-      // textTheme: GoogleFonts.workSansTextTheme().apply(
-      //   bodyColor: primaryColor,
-      //   displayColor: primaryColor,
-      // ),
-      textTheme: const TextTheme(
-        bodyMedium: TextStyle(color: primaryColor),
-        displayLarge: TextStyle(color: primaryColor),
+      textTheme: GoogleFonts.workSansTextTheme().apply(
+        bodyColor: primaryColor,
+        displayColor: primaryColor,
       ),
-      appBarTheme: const AppBarTheme(
+      appBarTheme: AppBarThemeData(
         backgroundColor: canvasColor,
         elevation: 0.0,
         centerTitle: true,
-        iconTheme: IconThemeData(color: primaryColor),
-        titleTextStyle: TextStyle(
+        iconTheme: const IconThemeData(color: primaryColor),
+        titleTextStyle: GoogleFonts.workSans(
           color: primaryColor,
           fontSize: 20,
           fontWeight: FontWeight.bold,
-          // fontFamily: 'Work Sans', // Ensure font is applied
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: surfaceColor,
         elevation: 0.0,
         shape: RoundedRectangleBorder(
@@ -82,10 +77,10 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           minimumSize: const Size(double.infinity, 56), // h-14 (56px)
-          // textStyle: GoogleFonts.workSans(
-          //   fontSize: 16,
-          //   fontWeight: FontWeight.w600,
-          // ),
+          textStyle: GoogleFonts.workSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
@@ -97,10 +92,10 @@ class AppTheme {
             borderRadius: BorderRadius.circular(12),
           ),
           minimumSize: const Size(double.infinity, 56),
-          // textStyle: GoogleFonts.workSans(
-          //   fontSize: 16,
-          //   fontWeight: FontWeight.w600,
-          // ),
+          textStyle: GoogleFonts.workSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       floatingActionButtonTheme: const FloatingActionButtonThemeData(

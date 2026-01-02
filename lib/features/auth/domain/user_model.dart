@@ -11,8 +11,17 @@ abstract class UserModel with _$UserModel {
     required String password,
     @Default('') String fullName,
     @Default([]) List<String> interests,
+    @Default([]) List<String> favoriteIds,
+    String? photoUrl,
   }) = _UserModel;
+
+
+
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);
+}
+
+extension UserModelX on UserModel {
+  bool get isAdmin => username == 'emre' || username == 'emre@xen.com';
 }

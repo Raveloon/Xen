@@ -10,14 +10,35 @@ import '../features/jobs/presentation/edit_job_screen.dart';
 import '../features/personalization/presentation/interests_screen.dart';
 import '../features/personalization/presentation/personalized_jobs_screen.dart';
 import '../features/jobs/domain/job_model.dart';
+import '../features/auth/domain/user_model.dart';
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authNotifierProvider);
+  // Use a Listenable that notifies when auth state changes
+  // We use ValueNotifier to bridge Riverpod state to GoRouter
+  final authStateNotifier = ValueNotifier<AsyncValue<UserModel?>>(const AsyncValue.loading());
+
+  // Keep the notifier in sync with the provider
+  ref.onDispose(authStateNotifier.dispose);
+  
+  ref.listen<AsyncValue<UserModel?>>(
+    authNotifierProvider,
+    (previous, next) {
+      authStateNotifier.value = next;
+    },
+    fireImmediately: true,
+  );
 
   return GoRouter(
     initialLocation: '/login',
-    refreshListenable: ValueNotifier(authState), // Simple refresh trigger
+    refreshListenable: authStateNotifier,
     redirect: (context, state) {
+      final authState = ref.read(authNotifierProvider);
+      
+      // If still loading (initial), don't redirect yet or show loading?
+      // But typically we wait for data.
+      // If we have data (even null), we can decide.
+      if (authState.isLoading) return null;
+
       final isLoggedIn = authState.asData?.value != null;
       final isLoggingIn = state.uri.toString() == '/login';
 
@@ -44,6 +65,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const PersonalizedJobsScreen(),
       ),
       GoRoute(
+        path: '/favorites',
+        builder: (context, state) => const PersonalizedJobsScreen(title: 'Favoriler'),
+      ),
+      GoRoute(
         path: '/detail',
         builder: (context, state) {
           final extra = state.extra as Map<String, dynamic>;
@@ -54,7 +79,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/add_job',
-        builder: (context, state) => const AddJobScreen(),
+        builder: (context, state) {
+          final jobToEdit = state.extra as JobModel?;
+          return AddJobScreen(jobToEdit: jobToEdit);
+        },
       ),
       GoRoute(
         path: '/edit_job',

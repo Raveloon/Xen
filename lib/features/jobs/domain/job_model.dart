@@ -13,10 +13,18 @@ abstract class JobModel with _$JobModel {
     required String location,
     @JsonKey(fromJson: _timestampFromJson, toJson: _timestampToJson)
     required DateTime datePosted,
+    @JsonKey(fromJson: _timestampFromJsonNullable, toJson: _timestampToJsonNullable)
+    DateTime? updatedAt,
     required double salary,
     required String description,
     required List<String> tags,
+    @Default('Emre') String creatorName,
+    @Default('') String creatorId,
   }) = _JobModel;
+
+  const JobModel._(); // Required for getters in Freezed classes
+
+  bool get isEdited => updatedAt != null;
 
   factory JobModel.fromJson(Map<String, dynamic> json) =>
       _$JobModelFromJson(json);
@@ -30,3 +38,14 @@ DateTime _timestampFromJson(dynamic date) {
 }
 
 dynamic _timestampToJson(DateTime date) => Timestamp.fromDate(date);
+
+DateTime? _timestampFromJsonNullable(dynamic date) {
+  if (date == null) return null;
+  if (date is Timestamp) {
+    return date.toDate();
+  }
+  return DateTime.parse(date as String);
+}
+
+dynamic _timestampToJsonNullable(DateTime? date) =>
+    date == null ? null : Timestamp.fromDate(date);
